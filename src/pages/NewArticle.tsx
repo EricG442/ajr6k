@@ -29,6 +29,10 @@ export default function NewArticle() {
             </div>
 
             <div className="rounded-xl border bg-muted p-12 text-center">
+                TipTap Editor goes here
+            </div>
+
+            <div className="rounded-xl border bg-muted p-12 text-center">
                 <Button variant="outline">
                     Save Draft
                 </Button>
