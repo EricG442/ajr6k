@@ -5,6 +5,7 @@ import Dashboard from "@/pages/Dashboard";
 import Login from "@/pages/Login";
 import Article from "@/pages/Article";
 import NewArticle from "@/pages/NewArticle";
+import { DesignSystem } from "@/pages/Design-System";
 
 export const router = createBrowserRouter([
     {
@@ -15,6 +16,7 @@ export const router = createBrowserRouter([
             { path: "/login", element: <Login />},
             { path: "/article/:slug", element: <Article /> },
             { path: "/dashboard/newarticle", element: <NewArticle /> },
+            { path: "/design-system", element: <DesignSystem /> },
         ],
     },
 ]);
