@@ -23,15 +23,15 @@ export function DesignSystem() {
 
             <Separator className="my-4" />
 
-            {/* button block */}
-
-            <Buttons />
-
-            <Separator className="my-4" />
-
             {/* spacing system */}
 
             <SpacingSystem />
+
+            <Separator className="my-4" />
+
+            {/* button block */}
+
+            <Buttons />
 
             <Separator className="my-4" />
         </div>
