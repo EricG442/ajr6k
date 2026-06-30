@@ -5,7 +5,7 @@ import Dashboard from "@/pages/Dashboard";
 import Login from "@/pages/Login";
 import Article from "@/pages/Article";
 import NewArticle from "@/pages/NewArticle";
-import { DesignSystem } from "@/pages/Design-System";
+import { DesignSystem } from "@/components/design-system/Design-System";
 
 export const router = createBrowserRouter([
     {
