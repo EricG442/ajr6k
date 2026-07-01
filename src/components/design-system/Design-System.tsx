@@ -8,7 +8,7 @@ import { Separator } from "@/components/ui/separator";
 
 export function DesignSystem() {
     return (
-        <div>
+        <div className="bg-white">
             <Separator className="my-4" />
 
             {/* color block */}
