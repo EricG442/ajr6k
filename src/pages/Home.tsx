@@ -1,7 +1,6 @@
-import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
+import { FeaturedCard } from "@/components/ui/FeaturedCard";
+import { MiniCard } from "@/components/ui/MiniCard";
 
 export default function Home() {
     return (
@@ -19,23 +18,7 @@ export default function Home() {
                     Featured Story
                 </h2>
 
-                <Card className="overflow-hidden">
-                    <div className="h-56 bg-muted" />
-
-                    <CardContent className="space-y-4 p-6">
-                        <Badge>Seahawks</Badge>
-
-                        <h3 className="text-2xl font-bold">
-                            Seahawks Shock NFL with Blockbuster Trade
-                        </h3>
-
-                        <p className="text-muted-foreground">
-                            A quick summary of the article goes here
-                        </p>
-
-                        <Button>Read Article</Button>
-                    </CardContent>
-                </Card>
+                <FeaturedCard />
             </section>
 
             {/* Latest */}
@@ -45,21 +28,7 @@ export default function Home() {
                 </h2>
 
                 {[1, 2, 3].map((story) => (
-                    <Card key={story}>
-                        <CardContent className="flex gap-4-p-4">
-                            <div className="h-20 w-20 rounded-md bg-muted" />
-                            
-                            <div className="space-y-2">
-                                <h3 className="font-semibold">
-                                    Sample Article Title
-                                </h3>
-
-                                <p className="text-sm text-muted-foreground">
-                                    Short Description...
-                                </p>
-                            </div>
-                        </CardContent>
-                    </Card>
+                    <MiniCard id={story} />
                 ))}
             </section>
         </main>

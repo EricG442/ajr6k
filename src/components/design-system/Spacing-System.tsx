@@ -2,7 +2,9 @@ export function SpacingSystem() {
     const spacing = [0, 1, 2, 3, 4, 6, 8, 10, 12, 16];
     return (
         <div>
-            <h1 className="text-3xl font-bold">Spacing System</h1>
+            <h1 className="text-3xl font-bold">
+                Spacing System
+            </h1>
 
             <div className="space-y-6">
                 {spacing.map( s => (
