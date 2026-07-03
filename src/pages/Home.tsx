@@ -1,17 +1,11 @@
 import { Input } from "@/components/ui/input";
 import { FeaturedCard } from "@/components/ui/FeaturedCard";
 import { MiniCard } from "@/components/ui/MiniCard";
+import { Navbar } from "@/components/navbar/Navbar";
 
 export default function Home() {
     return (
         <main className="mx-auto max-w-6xl p-4 space-y-8">
-            {/* Header */}
-            <header className="space-y-4">
-                <h1 className="text-3xl font-bold">AJR6K</h1>
-
-                <Input placeholder="Search articles..." />
-            </header>
-
             {/* Featured */}
             <section>
                 <h2 className="mb-4 text-xl font-semibold">
