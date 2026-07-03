@@ -1,3 +1,5 @@
+import { NavLink } from "react-router-dom";
+
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 
@@ -9,7 +11,9 @@ export default function Dashboard() {
                     Dashboard
                 </h1>
 
-                <Button>New Article</Button>
+                <Button>
+                    <NavLink to="/article/new">New Article</NavLink>
+                </Button>
             </header>
 
             <section className="grid grid-cols-2 gap-4">

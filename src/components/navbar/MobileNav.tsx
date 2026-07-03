@@ -5,6 +5,7 @@ import {
     Sheet,
     SheetContent,
     SheetTrigger,
+    SheetClose,
 } from "@/components/ui/sheet";
 import { Button } from "../ui/button";
 import { Input } from "@/components/ui/input";
@@ -29,22 +30,30 @@ export function MobileNav() {
                     </div>
 
                     {navLinks.map( link => (
-                        <Button
-                            asChild
-                            variant="ghost"
-                            className="w-full justify-center py-6"
-                        >
-                            <NavLink
-                                key={link.href}
-                                to={link.href}
-                                className="text-sm font-medium hover:text-primary"
+                        <SheetClose asChild>
+                            <Button
+                                asChild
+                                variant="ghost"
+                                className="w-full justify-center py-6"
                             >
-                                {link.label}
-                            </NavLink>
-                        </Button>
-                    ))
-                        
-                    }
+                                <NavLink
+                                    key={link.href}
+                                    to={link.href}
+                                    className="text-sm font-medium hover:text-primary"
+                                >
+                                    {link.label}
+                                </NavLink>
+                            </Button>
+                        </SheetClose>
+                    ))}
+
+                    <div className="w-full flex justify-center">
+                        <SheetClose asChild>
+                            <Button asChild>
+                                <NavLink to="/login">Log in</NavLink>
+                            </Button>
+                        </SheetClose>
+                    </div>
                 </SheetContent>
             </Sheet>
         </div>

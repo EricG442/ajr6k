@@ -2,6 +2,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
+import { NavLink } from "react-router-dom";
 
 export default function Login() {
     return (
@@ -20,7 +21,9 @@ export default function Login() {
                         <Input placeholder="password" />
                     </div>
 
-                    <Button>Login</Button>
+                    <Button>
+                        <NavLink to="/dashboard">Log in</NavLink>
+                    </Button>
                 </CardContent>
             </Card>
         </main>

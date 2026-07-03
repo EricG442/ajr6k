@@ -1,7 +1,5 @@
-import { Input } from "@/components/ui/input";
 import { FeaturedCard } from "@/components/ui/FeaturedCard";
 import { MiniCard } from "@/components/ui/MiniCard";
-import { Navbar } from "@/components/navbar/Navbar";
 
 export default function Home() {
     return (
