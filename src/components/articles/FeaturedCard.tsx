@@ -1,25 +1,36 @@
+import type { Article } from "@/data/articles";
+
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { NavLink } from "react-router-dom";
 
-export function FeaturedCard() {
+type FeaturedCardProps = {
+    article: Article
+}
+
+export function FeaturedCard({ article }: FeaturedCardProps) {
     return (
         <div>
-            <Card className="overflow-hidden">
+            <Card  key={article.id} className="overflow-hidden">
                 <div className="h-56 bg-muted" />
 
                 <CardContent className="space-y-4 p-6">
-                    <Badge>Seahawks</Badge>
+                    <Badge>{article.league}</Badge>
 
                     <h3 className="text-2xl font-bold">
-                        Seahawks Shock NFL with Blockbuster Trade
+                        {article.title}
                     </h3>
 
                     <p className="text-muted-foreground">
-                        A quick summary of the article goes here
+                        {article.summary}
                     </p>
 
-                    <Button>Read Article</Button>
+                    <Button asChild>
+                        <NavLink to={`/article/${article.slug}`}>
+                            Read Article
+                        </NavLink>
+                    </Button>
                 </CardContent>
             </Card>
         </div>

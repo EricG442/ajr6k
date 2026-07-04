@@ -1,6 +1,6 @@
 export const navLinks = [
     { label: "Home", href: "/" },
-    { label: "NFL", href: "/" },
-    { label: "NBA", href: "/" },
+    { label: "NFL", href: "/league/nfl" },
+    { label: "NBA", href: "/league/nba" },
     { label: "MLB", href: "/" },
 ]
