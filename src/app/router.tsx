@@ -6,12 +6,14 @@ import Login from "@/pages/Login";
 import Article from "@/pages/Article";
 import NewArticle from "@/pages/NewArticle";
 import { DesignSystem } from "@/components/design-system/Design-System";
+import LeaguePage from "@/pages/League";
 
 export const router = createBrowserRouter([
     {
         element: <Layout />,
         children: [
             { path: "/", element: <Home /> },
+            { path: "/league/:league", element: <LeaguePage /> },
             { path: "/dashboard", element: <Dashboard /> },
             { path: "/login", element: <Login />},
             { path: "/article/:slug", element: <Article /> },

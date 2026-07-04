@@ -1,5 +1,6 @@
 import { DesktopNav } from "@/components/navbar/DesktopNav";
 import { MobileNav } from "@/components/navbar/MobileNav";
+import { NavLink } from "react-router-dom";
 
 export function Navbar() {
     return (
@@ -7,7 +8,9 @@ export function Navbar() {
             <div className="relative flex h-16 items-center">
                 <DesktopNav />
                 <MobileNav />
-                <h1 className="absolute left-1/2 -translate-x-1/2 text-xl font-bold">AJR6K</h1>
+                <NavLink to="/" className="absolute left-1/2 -translate-x-1/2">
+                    <h1 className="text-xl font-bold">AJR6K</h1>
+                </NavLink>
             </div>
         </header>
     );

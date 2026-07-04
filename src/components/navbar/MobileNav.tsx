@@ -22,7 +22,7 @@ export function MobileNav() {
                         <Menu />
                     </Button>
                 </SheetTrigger>
-                <SheetContent side="left">
+                <SheetContent side="left" onOpenAutoFocus={ event => event.preventDefault()}>
                     <h1 className="w-full text-center font-bold text-xl">AJR6K</h1>
 
                     <div className="mx-8">

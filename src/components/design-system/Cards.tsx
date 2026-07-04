@@ -1,5 +1,5 @@
-import { FeaturedCard } from "@/components/ui/FeaturedCard";
-import { MiniCard } from "@/components/ui/MiniCard";
+import { FeaturedCard } from "@/components/articles/FeaturedCard";
+import { MiniCard } from "@/components/articles/MiniCard";
 
 export function Cards() {
     return (
