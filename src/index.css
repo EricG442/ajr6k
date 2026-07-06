@@ -167,6 +167,11 @@
   box-sizing: border-box;
 }
 
+.ProseMirror {
+  padding: 0.75rem;
+  border: 1px solid var(--border);
+}
+
 body {
   margin: 0;
 }

@@ -2,6 +2,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
+import TipTap from "@/components/editor/TipTap";
 
 export default function NewArticle() {
     return (
@@ -28,8 +29,8 @@ export default function NewArticle() {
                 <Textarea placeholder="Short article summary..." />
             </div>
 
-            <div className="rounded-xl border bg-muted p-12 text-center">
-                TipTap Editor goes here
+            <div className="rounded-xl border bg-muted py-12 text-center">
+                <TipTap />
             </div>
 
             <div className="rounded-xl border bg-muted p-12 text-center">
