@@ -1,20 +1,47 @@
-import { useEditor, EditorContent, EditorContext } from "@tiptap/react";
+import { EditorProvider, useCurrentEditor } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
-import { useMemo } from "react";
-import MenuBar from "@/components/editor/MenuBar";
+import TextAlign from "@tiptap/extension-text-align";
+import MenuBar from "./MenuBar";
+import { useEffect } from "react";
 
-export default function TipTap() {
-    const editor = useEditor({
-        extensions: [StarterKit],
-        content: "<p>Hello World!</p>"
-    })
+type TipTapProps = {
+    content: string;
+    onChange: ( content: string ) => void;
+    onEditorReady: (clear: () => void) => void;
+}
 
-    const providerValue = useMemo(() => ({ editor }), [editor]);
+function EditorController({ onEditorReady }: { onEditorReady: (clear: () => void) => void }) {
+    const { editor } = useCurrentEditor();
+
+    if (editor) {
+        onEditorReady(() => editor.commands.clearContent());
+    }
+
+    return null;
+}
+
+export default function TipTap({ content, onChange, onEditorReady }: TipTapProps) {
+    const { editor } = useCurrentEditor();
+
+    useEffect(() => {
+        if (editor) {
+            onEditorReady(() => editor.commands.clearContent());
+        }
+    }, [editor, onEditorReady]);
 
     return (
-        <EditorContext.Provider value={providerValue}>
-            <MenuBar />
-            <EditorContent editor={editor} />
-        </EditorContext.Provider>
+        <EditorProvider
+            extensions={[
+                StarterKit,
+                TextAlign.configure({
+                    types: ["heading", "paragraph"],
+                }),
+            ]}
+            content={content}
+            slotBefore={<MenuBar />}
+            onUpdate={({ editor }) => onChange(editor.getHTML())}
+        >
+            <EditorController onEditorReady={onEditorReady} />
+        </EditorProvider>
     )
 }

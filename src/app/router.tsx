@@ -4,7 +4,7 @@ import Home from "@/pages/Home";
 import Dashboard from "@/pages/Dashboard";
 import Login from "@/pages/Login";
 import Article from "@/pages/Article";
-import NewArticle from "@/pages/NewArticle";
+import Editor from "@/pages/Editor";
 import { DesignSystem } from "@/components/design-system/Design-System";
 import LeaguePage from "@/pages/League";
 
@@ -17,7 +17,7 @@ export const router = createBrowserRouter([
             { path: "/dashboard", element: <Dashboard /> },
             { path: "/login", element: <Login />},
             { path: "/article/:slug", element: <Article /> },
-            { path: "/article/new", element: <NewArticle /> },
+            { path: "/article/editor", element: <Editor /> },
         ],
     },
     { path: "/design-system", element: <DesignSystem /> },

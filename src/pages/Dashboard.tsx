@@ -12,7 +12,7 @@ export default function Dashboard() {
                 </h1>
 
                 <Button>
-                    <NavLink to="/article/new">New Article</NavLink>
+                    <NavLink to="/article/editor">New Article</NavLink>
                 </Button>
             </header>
 
