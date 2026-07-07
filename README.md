@@ -1,75 +1,89 @@
-# React + TypeScript + Vite
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+# 🚀 AJR6K
+![React](https://img.shields.io/badge/React-19-61DAFB?logo=react)
+![TypeScript](https://img.shields.io/badge/TypeScript-5-3178C6?logo=typescript)
+![Vite](https://img.shields.io/badge/Vite-Build-purple?logo=vite) 
+![TailwindCSS](https://img.shields.io/badge/TailwindCSS-4-06B6D4?logo=tailwindcss) 
+![shadcn/ui](https://img.shields.io/badge/shadcn/ui-components-black)
+![Licencse](https://img.shields.io/badge/license-MIT-blue)
 
-Currently, two official plugins are available:
+A sports journalism platform currently being developed as a custom CMS experience
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+The project is starting as a static React application with a custom Tiptap article editor.
+The current goal is to build the writing experience first, then expand into a full CMS with authentication, database storage, and publishing workflows.
 
-## React Compiler
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## Demo
 
-## Expanding the ESLint configuration
+Link to demo
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+## Overview
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+This project is being build in stages:
+- **v0.x** &mdash; Static frontend and editor
+- **v1.0** &mdash; Full CMS with backend services and production deployment
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+The current version focuses on creating a rich article writing experience before introducting backend complexity.
+### ✨ Features
 
+#### **v0.3.1**
+- Custom Tiptap rich text editor
+- Editor toolbar with:
+    - Headings
+    - Bold
+    - Italic
+    - Underline
+    - Strikethrough
+    - Text alignment
+- LocalStorage article persistence
+- Article clearing/reset functionality
+- Word and Character count tracking
+- Responsive UI
+
+
+### 🛠️ Tech Stack
+
+**Client:** React, Vite, Tailwind CSS, Tiptap
+
+**Future Server:** Node, Express, Supabase
+
+
+
+## ⚡ Installation
+
+Clone the repository:
+
+```bash
+    git clone https://github.com/EricG442/ajr6k
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+Install dependencies:
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-
+```bash
+    npm install
 ```
+
+Start the Development Server:
+
+```bash
+    npm run dev
+```
+
+    
+## 🚧 Roadmap
+
+### **v0.3.0** ✅
+- [x] ~~Tiptap editor integration~~
+- [x] ~~Custom toolbar~~
+- [x] ~~localStorage persistance~~
+- [x] ~~Editor statistics~~
+
+### **v1.0.0**
+- [ ] Supabase database integration
+- [ ] User authentication
+- [ ] Article CRUD operations
+- [ ] Image uploads
+- [ ] Dashboard Page
+- [ ] Production Deployment
+
