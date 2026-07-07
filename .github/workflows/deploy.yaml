@@ -5,12 +5,11 @@ on:
     branches: [ main ]
 
 permissions:
-  contents: write
+  contents: read
   pages: write
   id-token: write
 
 jobs:
-  build:
   build:
     runs-on: ubuntu-latest
     steps:
@@ -34,11 +33,11 @@ jobs:
         with:
           path: ./dist
 
-deploy:
-  needs: build
-  runs-on: ubuntu-latest
-  environment:
-    name: github-pages
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
 
   steps:
     - name: Deploy
