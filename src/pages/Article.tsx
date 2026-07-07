@@ -4,7 +4,6 @@ import type { Article } from "@/data/articles";
 
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
-import { ArticleGrid } from "@/components/articles/ArticleGrid";
 
 export default function Article() {
     const { slug } = useParams();

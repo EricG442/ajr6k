@@ -5,7 +5,6 @@ import Dashboard from "@/pages/Dashboard";
 import Login from "@/pages/Login";
 import Article from "@/pages/Article";
 import Editor from "@/pages/Editor";
-import { DesignSystem } from "@/components/design-system/Design-System";
 import LeaguePage from "@/pages/League";
 
 export const router = createBrowserRouter([
@@ -20,6 +19,4 @@ export const router = createBrowserRouter([
             { path: "/article/editor", element: <Editor /> },
         ],
     },
-    { path: "/design-system", element: <DesignSystem /> },
-    
 ]);
