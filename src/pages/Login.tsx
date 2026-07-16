@@ -1,10 +1,36 @@
+import { useState } from "react";
+import { supabase } from "@/lib/supabase";
+import { useNavigate } from "react-router-dom";
+
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { NavLink } from "react-router-dom";
 
 export default function Login() {
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
+    const [error, setError] = useState("");
+    const [loading, setLoading] = useState(false);
+    const navigate = useNavigate();
+
+    const handleLogin = async (email: string, password: string) => {
+        setLoading(true);
+        setError("");
+
+        const { error } = await supabase.auth.signInWithPassword({
+            email,
+            password,
+        });
+
+        if (error) {
+            setError(error.message);
+            setLoading(false);
+            return;
+        } 
+        navigate("/dashboard");
+    };
+
     return (
         <main className="mx-auto max-w-6xl p-4">
             <Card className="overflow-hidden">
@@ -12,18 +38,30 @@ export default function Login() {
                     <div>
                         <Label>email</Label>
 
-                        <Input placeholder="example@email.com" />
+                        <Input
+                            placeholder="example@email.com"
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
+                        />
                     </div>
 
                     <div>
                         <Label>password</Label>
 
-                        <Input placeholder="password" />
+                        <Input
+                            placeholder="password"
+                            type="password"
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)}
+                        />
                     </div>
 
-                    <Button>
-                        <NavLink to="/dashboard">Log in</NavLink>
-                    </Button>
+                    <div>
+                        <Button onClick={() => handleLogin(email, password)} disabled={loading}>
+                            {loading ? "Logging in..." : "Log in"}
+                        </Button>
+                        {error && <p className="text-red-500">{error}</p>}
+                    </div>
                 </CardContent>
             </Card>
         </main>
