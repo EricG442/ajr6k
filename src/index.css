@@ -173,6 +173,16 @@
   border: 1px solid var(--border);
 }
 
+.tiptap ul {
+  list-style-type: disc;
+  padding-left: 1.5rem;
+}
+
+.tiptap ol {
+  list-style-type: decimal;
+  padding-left: 1.5rem;
+}
+
 body {
   margin: 0;
 }

@@ -11,14 +11,19 @@ import TipTap from "@/components/editor/TipTap";
 import EditorStats from "@/components/editor/EditorStats";
 
 export default function Editor() {
+    console.log("Editor rendered");
     const { profile } = useAuth();
     const { id } = useParams();
     const isEdit = Boolean(id);
+    const [editorKey, setEditorKey] = useState(0);
 
 
-    const [title, setTitle] = useState("")
-    const [slug, setSlug] = useState("")
-    const [excerpt, setExcerpt] = useState("")
+    const [title, setTitle] = useState("");
+    const [slug, setSlug] = useState("");
+    const [excerpt, setExcerpt] = useState("");
+    const [coverImage, setCoverImage] = useState<File | null>(null);
+    const [coverImageUrl, setCoverImageUrl] = useState("");
+    const [coverPreview, setCoverPreview] = useState("");
     const [content, setContent] = useState<object>({
         type: "doc",
         content: [],
@@ -53,6 +58,8 @@ export default function Editor() {
         setTitle("")
         setSlug("")
         setExcerpt("")
+        setCoverImage(null);
+        setCoverPreview("");
         setContent({
             type: "doc",
             content: [],
@@ -62,11 +69,32 @@ export default function Editor() {
 
     const handleSubmit = async () => {
         if (!profile) return;
-        if (isEdit) {
-            await supabase.from("posts").update({ title, slug, excerpt, content }).eq("id", id);
-        } else {
-            await supabase.from("posts").insert({ title, slug, excerpt, content, author_id: profile.id });
+        console.log("Cover image before upload:", coverImage);
+        let imageUrl = coverImageUrl;
+        if (coverImage) {
+            const uploadedUrl = await uploadCoverImage();
+            if (uploadedUrl) {
+                imageUrl = uploadedUrl;
+            }
         }
+        console.log("Image URL:", imageUrl);
+        if (isEdit) {
+            await supabase.from("posts").update({ title, slug, excerpt, content, cover_image: imageUrl }).eq("id", id);
+        } else {
+            await supabase.from("posts").insert({ title, slug, excerpt, content, cover_image: imageUrl, author_id: profile.id });
+        }
+    }
+
+    const uploadCoverImage = async (): Promise<string | null> => {
+        if (!coverImage || !profile) return null;
+        const filePath = `${profile.id}/${coverImage.name}`;
+        const { error } = await supabase.storage.from("article-images").upload(filePath, coverImage);
+        if (error) {
+            console.error(error);
+            return null;
+        };
+        const { data } = await supabase.storage.from("article-images").getPublicUrl(filePath);
+        return data.publicUrl;
     }
 
     useEffect(() => {
@@ -80,36 +108,39 @@ export default function Editor() {
             setTitle(data.title);
             setSlug(data.slug);
             setExcerpt(data.excerpt);
+            setCoverImageUrl(data.cover_image);
             setContent(
                 typeof data.content === "string" ? JSON.parse(data.content) : data.content
             );
         }
+        setEditorKey(prev => prev + 1);
         fetchArticle();
     }, [isEdit, id]);
 
     return (
-        <main className="mx-auto max-w-4xl space-y-6 p-4">
+        <div className="mx-auto max-w-4xl space-y-6 p-4">
             <h1 className="text-3xl font-bold">
                 New Article
             </h1>
+            <div className="flex flex-wrap gap-4">
+                <div className="space-y-2 max-w-sm flex-1">
+                    <Label>Title</Label>
 
-            <div className="space-y-2">
-                <Label>Title</Label>
+                    <Input 
+                        placeholder="Enter article title..." 
+                        value={title}
+                        onChange={(e) => setTitle(e.target.value)}
+                    />
+                </div>
 
-                <Input 
-                    placeholder="Enter article title..." 
-                    value={title}
-                    onChange={(e) => setTitle(e.target.value)}
-                />
-            </div>
+                <div className="space-y-2 max-w-sm flex-1">
+                    <Label>Slug</Label>
 
-            <div className="space-y-2">
-                <Label>Slug</Label>
-
-                <Input 
-                    value={slug}
-                    readOnly
-                />
+                    <Input 
+                        value={slug}
+                        readOnly
+                    />
+                </div>
             </div>
 
             <div className="space-y-2">
@@ -122,14 +153,46 @@ export default function Editor() {
                 />
             </div>
 
-            <div className="rounded-xl border bg-muted py-12 text-center">
-                <TipTap 
-                    content={content}
-                    onChange={setContent}
-                    onEditorReady={(clear) => {
-                        clearEditorRef.current = clear;
+            <div className="space-y-2">
+                <Label>Cover Image</Label>
+                <Input
+                    type="file" 
+                    accept="image/*"
+                    onChange={ e => {
+                        const file = e.target.files?.[0];
+                        if (file) {
+                            setCoverImage(file);
+                            setCoverPreview(URL.createObjectURL(file));
+                        }
                     }}
                 />
+                {coverPreview && (
+                    <img
+                        src={coverPreview}
+                        alt="Cover Preview"
+                        className="rounded-xl max-h-80 object-cover"
+                    />
+                )}
+                {coverImageUrl && (
+                    <img
+                        src={coverImageUrl}
+                        alt="Article cover"
+                        className="rounded-xl max-h-80 object-cover"
+                    />
+                )}
+            </div>
+
+            <div className="rounded-xl border bg-muted py-12">
+                <div className="prose">
+                    <TipTap
+                        key={editorKey}
+                        content={content}
+                        onChange={setContent}
+                        onEditorReady={(clear) => {
+                            clearEditorRef.current = clear;
+                        }}
+                    />
+                </div>
             </div>
 
             <div className="rounded-xl border bg-muted p-12 text-center flex flex-wrap gap-4 justify-content items-center">
@@ -146,6 +209,6 @@ export default function Editor() {
                 </Button>
                 <EditorStats content={content} />
             </div>
-        </main>
+        </div>
     )
 }
