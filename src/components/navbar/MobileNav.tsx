@@ -1,5 +1,6 @@
 import { Menu } from "lucide-react";
 import { NavLink } from "react-router-dom";
+import { useAuth } from "@/hooks/useAuth";
 
 import {
     Sheet,
@@ -11,9 +12,11 @@ import { Button } from "../ui/button";
 import { Input } from "@/components/ui/input";
 
 import { navLinks } from "@/components/navbar/NavLinks";
+import { supabase } from "@/lib/supabase";
 
 
 export function MobileNav() {
+    const { user } = useAuth();
     return (
         <div className="md:hidden">
             <Sheet>
@@ -49,9 +52,21 @@ export function MobileNav() {
 
                     <div className="w-full flex justify-center">
                         <SheetClose asChild>
-                            <Button asChild>
-                                <NavLink to="/login">Log in</NavLink>
-                            </Button>
+                            {
+                                user ? (
+                                    <Button
+                                        onClick={async () => {
+                                            await supabase.auth.signOut();
+                                        }}
+                                    >
+                                        Sign Out
+                                    </Button>
+                                ) : (
+                                    <Button asChild>
+                                        <NavLink to="/login">Log in</NavLink>
+                                    </Button>
+                                )
+                            }
                         </SheetClose>
                     </div>
                 </SheetContent>

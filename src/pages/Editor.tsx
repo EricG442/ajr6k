@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/lib/supabase";
+import { useParams } from "react-router-dom";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -11,24 +12,39 @@ import EditorStats from "@/components/editor/EditorStats";
 
 export default function Editor() {
     const { profile } = useAuth();
-    const savedArticle = JSON.parse(localStorage.getItem("savedArticle") ?? "{}")
+    const { id } = useParams();
+    const isEdit = Boolean(id);
 
-    const [title, setTitle] = useState(savedArticle.title || "")
-    const [slug, setSlug] = useState(savedArticle.slug || "")
-    const [excerpt, setExcerpt] = useState(savedArticle.excerpt || "")
-    const [content, setContent] = useState(savedArticle.content || {
+
+    const [title, setTitle] = useState("")
+    const [slug, setSlug] = useState("")
+    const [excerpt, setExcerpt] = useState("")
+    const [content, setContent] = useState<object>({
         type: "doc",
         content: [],
     })
+
+    useEffect(() => {
+        if (isEdit) return;
+        const savedArticle = localStorage.getItem("savedArticle");
+        if (savedArticle) {
+            const { title, slug, excerpt, content } = JSON.parse(savedArticle);
+            setTitle(title);
+            setSlug(slug);
+            setExcerpt(excerpt);
+            setContent(content);
+        }
+    }, [isEdit]);
 
     const generateSlug = (title: string) => {
         return title.toLowerCase().trim().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "");
     }
 
     useEffect(() => {
+        if (isEdit) return;
         setSlug(generateSlug(title));
         localStorage.setItem("savedArticle", JSON.stringify({ title, slug, excerpt, content }))
-    }, [title, slug, excerpt, content]);
+    }, [title, slug, excerpt, content, isEdit]);
 
     const clearEditorRef = useRef<() => void | null>(null);
 
@@ -46,22 +62,30 @@ export default function Editor() {
 
     const handleSubmit = async () => {
         if (!profile) return;
-        setSlug(generateSlug(title));
-        const { data, error } = await supabase.from("posts").insert({
-            author_id: profile?.id,
-            title,
-            slug,
-            excerpt,
-            content,
-            published: false,
-        }).select();
-        if (error) {
-            console.error("Error creating post:", error);
-            return;
+        if (isEdit) {
+            await supabase.from("posts").update({ title, slug, excerpt, content }).eq("id", id);
+        } else {
+            await supabase.from("posts").insert({ title, slug, excerpt, content, author_id: profile.id });
         }
-        clearContent();
-        console.log(data, error);
     }
+
+    useEffect(() => {
+        if (!isEdit) return;
+        const fetchArticle = async () => {
+            const { data, error } = await supabase.from("posts").select("*").eq("id", id).single();
+            if (error) {
+                console.error("Error fetching article:", error);
+                return;
+            }
+            setTitle(data.title);
+            setSlug(data.slug);
+            setExcerpt(data.excerpt);
+            setContent(
+                typeof data.content === "string" ? JSON.parse(data.content) : data.content
+            );
+        }
+        fetchArticle();
+    }, [isEdit, id]);
 
     return (
         <main className="mx-auto max-w-4xl space-y-6 p-4">
@@ -110,7 +134,7 @@ export default function Editor() {
 
             <div className="rounded-xl border bg-muted p-12 text-center flex flex-wrap gap-4 justify-content items-center">
                 <Button variant="outline" onClick={handleSubmit}>
-                    Save Draft
+                    {isEdit ? "Update Article" : "Save Draft"}
                 </Button>
 
                 <Button>

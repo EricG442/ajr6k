@@ -10,14 +10,15 @@ type TipTapProps = {
     onEditorReady: (clear: () => void) => void;
 }
 
-function EditorController({ onEditorReady }: { onEditorReady: (clear: () => void) => void }) {
+function EditorController({ content, onEditorReady }: { content: object; onEditorReady: (clear: () => void) => void }) {
     const { editor } = useCurrentEditor();
 
     useEffect(() => {
         if (editor) {
+            editor.commands.setContent(content);
             onEditorReady(() => editor.commands.clearContent());
         }
-    }, [editor, onEditorReady]);
+    }, [editor, onEditorReady, content]);
 
     return null;
 }
@@ -27,9 +28,19 @@ export default function TipTap({ content, onChange, onEditorReady }: TipTapProps
 
     useEffect(() => {
         if (editor) {
-            onEditorReady(() => editor.commands.clearContent());
+            onEditorReady(() => editor.commands.setContent(content));
         }
-    }, [editor, onEditorReady]);
+    }, [editor, onEditorReady, content]);
+
+    useEffect(() => {
+        if (editor) {
+            const current = editor.getJSON();
+            const incoming = JSON.stringify(content);
+            if (JSON.stringify(current) !== incoming) {
+                editor.commands.setContent(content);
+            }
+        }
+    }, [editor, content]);
 
     return (
         <EditorProvider
@@ -43,7 +54,7 @@ export default function TipTap({ content, onChange, onEditorReady }: TipTapProps
             slotBefore={<MenuBar />}
             onUpdate={({ editor }) => onChange(editor.getJSON())}
         >
-            <EditorController onEditorReady={onEditorReady} />
+            <EditorController content={content} onEditorReady={onEditorReady} />
         </EditorProvider>
     )
 }

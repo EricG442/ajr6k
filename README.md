@@ -81,6 +81,7 @@ Start the Development Server:
 
 ### **v0.4.0**
 - [x] ~~Supabase Auth~~
+- [x] ~~CRUD operations~~
 
 ### **v1.0.0**
 - [ ] Supabase database integration

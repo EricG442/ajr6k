@@ -18,7 +18,16 @@ export default function Dashboard() {
             return;
         }
         setPosts(data);
-    }
+    };
+
+    const deletePost = async (id: string) => {
+        const { error } = await supabase.from("posts").delete().eq("id", id);
+        if (error) {
+            console.error("Error deleting post:", error);
+            return;
+        }
+        fetchPosts();
+    };
 
     useEffect(() => {
         fetchPosts();
@@ -69,9 +78,14 @@ export default function Dashboard() {
                                 <h3 className="font-medium">{post.title}</h3>
                                 <p className="text-sm text-muted-foreground">{post.created_at}</p>
                             </div>
-                            <Button variant="outline" size="sm">
-                                Edit
-                            </Button>
+                            <div className="flex gap-2">
+                                <Button variant="outline" size="sm">
+                                    <NavLink to={`/article/editor/${post.id}`}>Edit</NavLink>
+                                </Button>
+                                <Button variant="outline" className="bg-destructive text-destructive" size="sm" onClick={() => deletePost(post.id)}>
+                                    Delete
+                                </Button>
+                            </div>
                         </CardContent>
                     </Card>
                 ))}
