@@ -1,9 +1,29 @@
 import { NavLink } from "react-router-dom";
+import { useAuth } from "@/hooks/useAuth";
+import { supabase } from "@/lib/supabase";
+import { useState, useEffect } from "react";
 
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 
 export default function Dashboard() {
+    const { profile } = useAuth();
+    const [posts, setPosts] = useState<any[]>([]);
+
+    const fetchPosts = async () => {
+        if (!profile) return;
+        const { data, error } = await supabase.from("posts").select("*").order("created_at", { ascending: false });
+        if (error) {
+            console.error("Error fetching posts:", error);
+            return;
+        }
+        setPosts(data);
+    }
+
+    useEffect(() => {
+        fetchPosts();
+    }, [])
+
     return (
         <main className="p-4 space-y-6">
             <header className="flex items-center justify-between">
@@ -42,20 +62,14 @@ export default function Dashboard() {
                     Recent Articles
                 </h2>
 
-                {[1, 2, 3].map((article) => (
-                    <Card key={article}>
+                {posts.map((post) => (
+                    <Card key={post.id}>
                         <CardContent className="flex items-center justify-between p-4">
                             <div>
-                                <h3 className="font-medium">
-                                    Seahawks Draft Analysis
-                                </h3>
-
-                                <p className="text-sm text-muted-foreground">
-                                    Published yesterday
-                                </p>
+                                <h3 className="font-medium">{post.title}</h3>
+                                <p className="text-sm text-muted-foreground">{post.created_at}</p>
                             </div>
-
-                            <Button variant="outline">
+                            <Button variant="outline" size="sm">
                                 Edit
                             </Button>
                         </CardContent>

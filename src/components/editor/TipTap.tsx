@@ -5,17 +5,19 @@ import MenuBar from "./MenuBar";
 import { useEffect } from "react";
 
 type TipTapProps = {
-    content: string;
-    onChange: ( content: string ) => void;
+    content: object;
+    onChange: ( content: object ) => void;
     onEditorReady: (clear: () => void) => void;
 }
 
 function EditorController({ onEditorReady }: { onEditorReady: (clear: () => void) => void }) {
     const { editor } = useCurrentEditor();
 
-    if (editor) {
-        onEditorReady(() => editor.commands.clearContent());
-    }
+    useEffect(() => {
+        if (editor) {
+            onEditorReady(() => editor.commands.clearContent());
+        }
+    }, [editor, onEditorReady]);
 
     return null;
 }
@@ -39,7 +41,7 @@ export default function TipTap({ content, onChange, onEditorReady }: TipTapProps
             ]}
             content={content}
             slotBefore={<MenuBar />}
-            onUpdate={({ editor }) => onChange(editor.getHTML())}
+            onUpdate={({ editor }) => onChange(editor.getJSON())}
         >
             <EditorController onEditorReady={onEditorReady} />
         </EditorProvider>

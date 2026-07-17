@@ -9,7 +9,7 @@ export function Navbar() {
                 <DesktopNav />
                 <MobileNav />
                 <NavLink to="/" className="absolute left-1/2 -translate-x-1/2">
-                    <h1 className="text-xl font-bold">AJR6K</h1>
+                    <h1 className="text-xl font-bold">Astro6K</h1>
                 </NavLink>
             </div>
         </header>

@@ -1,33 +1,34 @@
+import { useEffect, useRef, useState } from "react";
+import { useAuth } from "@/hooks/useAuth";
+import { supabase } from "@/lib/supabase";
+
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import TipTap from "@/components/editor/TipTap";
-import { useEffect, useRef, useState } from "react";
 import EditorStats from "@/components/editor/EditorStats";
 
 export default function Editor() {
+    const { profile } = useAuth();
     const savedArticle = JSON.parse(localStorage.getItem("savedArticle") ?? "{}")
 
     const [title, setTitle] = useState(savedArticle.title || "")
     const [slug, setSlug] = useState(savedArticle.slug || "")
     const [excerpt, setExcerpt] = useState(savedArticle.excerpt || "")
-    const [content, setContent] = useState(savedArticle.content || "")
+    const [content, setContent] = useState(savedArticle.content || {
+        type: "doc",
+        content: [],
+    })
+
+    const generateSlug = (title: string) => {
+        return title.toLowerCase().trim().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "");
+    }
 
     useEffect(() => {
+        setSlug(generateSlug(title));
         localStorage.setItem("savedArticle", JSON.stringify({ title, slug, excerpt, content }))
     }, [title, slug, excerpt, content]);
-
-    useEffect(() => {
-        const saved = localStorage.getItem("savedArticle")
-        if (saved) {
-            const article = JSON.parse(saved)
-            setTitle(article.title)
-            setSlug(article.slug)
-            setExcerpt(article.excerpt)
-            setContent(article.content)
-        }
-    }, []);
 
     const clearEditorRef = useRef<() => void | null>(null);
 
@@ -36,9 +37,31 @@ export default function Editor() {
         setTitle("")
         setSlug("")
         setExcerpt("")
-        setContent("")
+        setContent({
+            type: "doc",
+            content: [],
+        })
         clearEditorRef.current?.();
     };
+
+    const handleSubmit = async () => {
+        if (!profile) return;
+        setSlug(generateSlug(title));
+        const { data, error } = await supabase.from("posts").insert({
+            author_id: profile?.id,
+            title,
+            slug,
+            excerpt,
+            content,
+            published: false,
+        }).select();
+        if (error) {
+            console.error("Error creating post:", error);
+            return;
+        }
+        clearContent();
+        console.log(data, error);
+    }
 
     return (
         <main className="mx-auto max-w-4xl space-y-6 p-4">
@@ -60,9 +83,8 @@ export default function Editor() {
                 <Label>Slug</Label>
 
                 <Input 
-                    placeholder="seahawks-draft-analysis" 
                     value={slug}
-                    onChange={(e) => setSlug(e.target.value)}
+                    readOnly
                 />
             </div>
 
@@ -87,7 +109,7 @@ export default function Editor() {
             </div>
 
             <div className="rounded-xl border bg-muted p-12 text-center flex flex-wrap gap-4 justify-content items-center">
-                <Button variant="outline">
+                <Button variant="outline" onClick={handleSubmit}>
                     Save Draft
                 </Button>
 

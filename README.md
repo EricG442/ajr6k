@@ -1,5 +1,5 @@
 
-# 🚀 AJR6K
+# 🚀 Astro6k
 ![React](https://img.shields.io/badge/React-19-61DAFB?logo=react)
 ![TypeScript](https://img.shields.io/badge/TypeScript-5-3178C6?logo=typescript)
 ![Vite](https://img.shields.io/badge/Vite-Build-purple?logo=vite) 
@@ -79,6 +79,9 @@ Start the Development Server:
 - [x] ~~localStorage persistance~~
 - [x] ~~Editor statistics~~
 
+### **v0.4.0**
+- [x] ~~Supabase Auth~~
+
 ### **v1.0.0**
 - [ ] Supabase database integration
 - [ ] User authentication
@@ -86,4 +89,3 @@ Start the Development Server:
 - [ ] Image uploads
 - [ ] Dashboard Page
 - [ ] Production Deployment
-
