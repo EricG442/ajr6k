@@ -3,14 +3,15 @@ import {
     DialogHeader,
     DialogTitle,
 } from "@/components/ui/dialog";
+import ProfileForm from "./ProfileForm";
 
 export default function ProfileDialog() {
     return (
-        <DialogContent>
+        <DialogContent className="max-w-120">
             <DialogHeader>
                 <DialogTitle>Profile Settings</DialogTitle>
             </DialogHeader>
-            <p>This is where the content goes</p>
+            <ProfileForm />
         </DialogContent>
     );
 }

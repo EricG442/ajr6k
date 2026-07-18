@@ -39,7 +39,7 @@ export default function Home() {
             {/* Featured */}
             <section>
                 <h2 className="mb-4 text-xl font-semibold">
-                    Featured Story
+                    {league ? `${league} Stories` : "Featured Story"}
                 </h2>
 
                 {featuredArticle && (

@@ -10,6 +10,12 @@ import { Star } from "lucide-react";
 export default function Dashboard() {
     const { profile } = useAuth();
     const [posts, setPosts] = useState<any[]>([]);
+    const [stats, setStats] = useState({
+        articles: 0,
+        drafts: 0,
+        published: 0,
+        views: 0
+    })
 
     const fetchPosts = async () => {
         if (!profile) return;
@@ -39,6 +45,33 @@ export default function Dashboard() {
     }
 
     useEffect(() => {
+        const fetchStats = async () => {
+            const { count } = await supabase
+                .from("posts")
+                .select("*", { count: "exact", head: true })
+                .eq("author_id", profile?.id) as { count: number | null };
+            const { count: draftsCount } = await supabase
+                .from("posts")
+                .select("*", { count: "exact", head: true })
+                .eq("author_id", profile?.id)
+                .eq("published", false) as { count: number | null };
+            const { count: publishedCount } = await supabase
+                .from("posts")
+                .select("*", { count: "exact", head: true })
+                .eq("author_id", profile?.id)
+                .eq("published", true) as { count: number | null };
+            setStats(prev => ({
+                ...prev,
+                articles: count ?? 0,
+                drafts: draftsCount ?? 0,
+                published: publishedCount ?? 0,
+            }));
+        };
+
+        fetchStats();
+    }, [profile]);
+
+    useEffect(() => {
         fetchPosts();
     }, [])
 
@@ -56,19 +89,19 @@ export default function Dashboard() {
 
             <section className="grid grid-cols-2 gap-4">
                 {[
-                    ["Articles", 42],
-                    ["Drafts", 3],
-                    ["Published", 39],
-                    ["Views", "12.3k"]
-                ].map(([title, value]) => (
-                    <Card key={title}>
+                    {title: "Articles", value: stats.articles},
+                    {title: "Drafts", value: stats.drafts},
+                    {title: "Published", value: stats.published},
+                    {title: "Views", value: stats.views}
+                ].map((stat) => (
+                    <Card key={stat.title}>
                         <CardContent className="p-6">
                             <p className="text-sm text-muted-foreground">
-                                {title}
+                                {stat.title}
                             </p>
 
                             <h2 className="mt-2 text-3xl font-bold">
-                                {value}
+                                {stat.value}
                             </h2>
                         </CardContent>
                     </Card>

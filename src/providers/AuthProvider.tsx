@@ -13,6 +13,7 @@ type Profile = {
     username: string;
     display_name: string;
     role: string;
+    bio: string;
 };
 
 type AuthContextType = {

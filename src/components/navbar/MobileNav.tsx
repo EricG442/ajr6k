@@ -23,12 +23,17 @@ import {
 } from "@/components/ui/dialog";
 import ProfileDialog from "../profile/ProfileSettingsDialog";
 
-import { navLinks } from "@/components/navbar/NavLinks";
+const navLinks = [
+    { label: "Home", href: "/" },
+    { label: "NFL", href: "/league/NFL" },
+    { label: "NBA", href: "/league/NBA" },
+    { label: "MLB", href: "/" },
+]
 
 export function MobileNav() {
     const { user, profile } = useAuth();
     return (
-        <div className="md:hidden">
+        <div>
             <Sheet>
                 <SheetTrigger asChild>
                     <Button variant="ghost" size="icon">
@@ -36,7 +41,7 @@ export function MobileNav() {
                     </Button>
                 </SheetTrigger>
                 <SheetContent side="left" onOpenAutoFocus={ event => event.preventDefault()}>
-                    <h1 className="w-full text-center font-bold text-xl">AJR6K</h1>
+                    <h1 className="w-full text-center font-bold text-xl">Astro6K</h1>
 
                     <div className="mx-8">
                         <Input placeholder="Search articles..." />
