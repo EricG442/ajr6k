@@ -11,19 +11,17 @@ import TipTap from "@/components/editor/TipTap";
 import EditorStats from "@/components/editor/EditorStats";
 
 export default function Editor() {
-    console.log("Editor rendered");
     const { profile } = useAuth();
     const { id } = useParams();
     const isEdit = Boolean(id);
-    const [editorKey, setEditorKey] = useState(0);
-
-
+    const [articleId, setArticleId] = useState<string | null>(null);
     const [title, setTitle] = useState("");
     const [slug, setSlug] = useState("");
     const [excerpt, setExcerpt] = useState("");
     const [coverImage, setCoverImage] = useState<File | null>(null);
     const [coverImageUrl, setCoverImageUrl] = useState("");
     const [coverPreview, setCoverPreview] = useState("");
+    const [isLoaded, setIsLoaded] = useState(false);
     const [content, setContent] = useState<object>({
         type: "doc",
         content: [],
@@ -97,6 +95,21 @@ export default function Editor() {
         return data.publicUrl;
     }
 
+    const handlePublish = async () => {
+        if (!profile) return;
+        if (!articleId) {
+            console.error("No article ID. Save draft first");
+            return;
+        }
+
+        const { data, error } = await supabase.from("posts").update({ published: true, }).eq("id", articleId).select();
+        if (error) {
+            console.error("Error publishing article:", error);
+            return;
+        }
+        console.log("Published:", data)
+    }
+
     useEffect(() => {
         if (!isEdit) return;
         const fetchArticle = async () => {
@@ -105,6 +118,7 @@ export default function Editor() {
                 console.error("Error fetching article:", error);
                 return;
             }
+            setArticleId(data.id);
             setTitle(data.title);
             setSlug(data.slug);
             setExcerpt(data.excerpt);
@@ -112,10 +126,12 @@ export default function Editor() {
             setContent(
                 typeof data.content === "string" ? JSON.parse(data.content) : data.content
             );
+            setIsLoaded(true);
         }
-        setEditorKey(prev => prev + 1);
         fetchArticle();
     }, [isEdit, id]);
+
+
 
     return (
         <div className="mx-auto max-w-4xl space-y-6 p-4">
@@ -123,7 +139,7 @@ export default function Editor() {
                 New Article
             </h1>
             <div className="flex flex-wrap gap-4">
-                <div className="space-y-2 max-w-sm flex-1">
+                <div className="space-y-2 max-w-2/3 flex-1">
                     <Label>Title</Label>
 
                     <Input 
@@ -133,7 +149,7 @@ export default function Editor() {
                     />
                 </div>
 
-                <div className="space-y-2 max-w-sm flex-1">
+                <div className="space-y-2 max-w-1/3 flex-1">
                     <Label>Slug</Label>
 
                     <Input 
@@ -185,8 +201,8 @@ export default function Editor() {
             <div className="rounded-xl border bg-muted py-12">
                 <div className="prose">
                     <TipTap
-                        key={editorKey}
                         content={content}
+                        isLoaded={isLoaded}
                         onChange={setContent}
                         onEditorReady={(clear) => {
                             clearEditorRef.current = clear;
@@ -200,7 +216,7 @@ export default function Editor() {
                     {isEdit ? "Update Article" : "Save Draft"}
                 </Button>
 
-                <Button>
+                <Button onClick={handlePublish}>
                     Publish
                 </Button>
 

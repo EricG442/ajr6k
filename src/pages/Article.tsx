@@ -1,57 +1,45 @@
 import { useParams } from "react-router-dom";
-import { getArticleBySlug } from "@/api/articlesAPI";
-import type { Article } from "@/data/articles";
-
-import { Badge } from "@/components/ui/badge";
-import { Separator } from "@/components/ui/separator";
+import { useEffect, useState } from "react";
+import { supabase } from "@/lib/supabase";
+import ArticleContent from "@/components/articles/ArticleContent";
 
 export default function Article() {
     const { slug } = useParams();
-    const article = getArticleBySlug(slug ?? "");
+    const [article, setArticle] = useState<any>(null);
+
+    useEffect(() => {
+        const fetchArticle = async () => {
+            if (!slug) return;
+            const { data, error } = await supabase.from("posts").select("*").eq("slug", slug).eq("published", true).single();
+            if (error) {
+                console.error(error);
+                return;
+            }
+            setArticle(data);
+        }
+        fetchArticle();
+    }, [slug]);
 
     if (!article) {
-        return <main>Article not found</main>;
+        return <p>Loading...</p>
     }
 
     return (
-        <main className="mx-auto max-w-3xl p-4 space-y-8">
-            <div className="h-64 rounded-xl bg-muted" />
-
-            <Badge>{article.league}</Badge>
-
-            <h1 className="text-4xl font-bold">
+        <div className="mx-auto max-w-4xl p-4">
+            <img
+                src={article.cover_image}
+                alt={article.title}
+                className="w-full rounded-xl"
+            />
+            <h1 className="mt-6 text-4xl font-bold">
                 {article.title}
-            </h1> 
-
-            <p className="text-lg font-medium">
-                {article.author}
+            </h1>
+            <p className="mt-2 text-muted-foreground">
+                {article.excerpt}
             </p>
-
-            <p className="text-muted-foreground">
-                {article.publishedAt} • 5 min read
-            </p>
-
-            <Separator className="border-2" />
-
-            <article className="prose prose-neutral dark:prose-invert max-w-none">
-                <p>
-                    {article.content}
-                </p>
-
-                <p>
-                    Another paragraph...
-                </p>
-
-                <p>
-                    Another paragraph...
-                </p>
+            <article className="prose mt-8">
+                <ArticleContent content={article.content} />
             </article>
-
-            <Separator className="border-2" />
-
-            <section className="space-y-4">
-                <h2 className="text-2xl font-bold">Related Articles</h2>
-            </section>
-        </main>
+        </div>
     )
 }
