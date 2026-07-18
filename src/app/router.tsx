@@ -5,6 +5,7 @@ import Dashboard from "@/pages/Dashboard";
 import Login from "@/pages/Login";
 import Article from "@/pages/Article";
 import Editor from "@/pages/Editor";
+import ProtectedRoute from "./ProtectedRoute";
 
 export const router = createBrowserRouter(
     [
@@ -13,11 +14,16 @@ export const router = createBrowserRouter(
             children: [
                 { path: "/", element: <Home /> },
                 { path: "/league/:league", element: <Home /> },
-                { path: "/dashboard", element: <Dashboard /> },
                 { path: "/login", element: <Login />},
                 { path: "/article/:slug", element: <Article /> },
-                { path: "/article/editor", element: <Editor /> },
-                { path: "/article/editor/:id", element: <Editor /> },
+                {
+                    element: <ProtectedRoute />,
+                    children: [
+                        { path: "/dashboard", element: <Dashboard /> },
+                        { path: "/article/editor", element: <Editor /> },
+                        { path: "/article/editor/:id", element: <Editor /> },
+                    ],
+                },
             ],
         },
     ],

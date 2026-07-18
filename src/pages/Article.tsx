@@ -24,6 +24,13 @@ export default function Article() {
         return <p>Loading...</p>
     }
 
+    const dateObj = new Date(article.published_at);
+
+    const formatter = new Intl.DateTimeFormat("en-US", {
+        dateStyle: "medium",
+        timeStyle: "short",
+    });
+
     return (
         <div className="mx-auto max-w-4xl p-4">
             <img
@@ -31,9 +38,17 @@ export default function Article() {
                 alt={article.title}
                 className="w-full rounded-xl"
             />
-            <h1 className="mt-6 text-4xl font-bold">
-                {article.title}
-            </h1>
+            <div className="mb-4">
+                <h1 className="mt-6 text-4xl font-bold">
+                    {article.title}
+                </h1>
+                <p className="text-muted-foreground">
+                    Written By: {article.author_name}               
+                </p>
+                <p className="text-muted-foreground">
+                    Published on: {formatter.format(dateObj)}
+                </p>
+            </div>
             <p className="mt-2 text-muted-foreground">
                 {article.excerpt}
             </p>

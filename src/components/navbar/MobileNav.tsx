@@ -47,39 +47,44 @@ export function MobileNav() {
                         <Input placeholder="Search articles..." />
                     </div>
 
-                    <SheetClose>
+                    
                         {user && (
-                            <Button
-                                variant="ghost"
-                                className="w-full justify-center py-6"
-                            >
-                                <NavLink
-                                    key="dashboard"
-                                    to="/dashboard"
-                                    className="text-sm font-medium hover:text-primary"
+                            <SheetClose asChild>
+                                <Button
+                                    asChild
+                                    variant="ghost"
+                                    className="w-full justify-center py-6"
                                 >
-                                    Dashboard
-                                </NavLink>
-                            </Button>
+                                    <NavLink
+                                        key="dashboard"
+                                        to="/dashboard"
+                                        className="text-sm font-medium hover:text-primary"
+                                    >
+                                        Dashboard
+                                    </NavLink>
+                                </Button>
+                            </SheetClose>
                         )}                        
                         {navLinks.map( link => (
-                            <Button
-                                variant="ghost"
-                                className="w-full justify-center py-6"
-                            >
-                                <NavLink
-                                    key={link.href}
-                                    to={link.href}
-                                    className="text-sm font-medium hover:text-primary"
+                            <SheetClose asChild>
+                                <Button
+                                    asChild
+                                    variant="ghost"
+                                    className="w-full justify-center py-6"
                                 >
-                                    {link.label}
-                                </NavLink>
-                            </Button>
+                                    <NavLink
+                                        key={link.href}
+                                        to={link.href}
+                                        className="text-sm font-medium hover:text-primary"
+                                    >
+                                        {link.label}
+                                    </NavLink>
+                                </Button>
+                            </SheetClose>
                         ))}
-                    </SheetClose>
+                    
 
                     <div className="w-full flex justify-center">
-                        <SheetClose asChild>
                             {
                                 user ? (
                                     <Dialog>
@@ -109,12 +114,13 @@ export function MobileNav() {
                                         <ProfileDialog />
                                     </Dialog>
                                 ) : (
-                                    <Button asChild>
-                                        <NavLink to="/login">Log in</NavLink>
-                                    </Button>
+                                    <SheetClose asChild>
+                                        <Button asChild>
+                                            <NavLink to="/login">Log in</NavLink>
+                                        </Button>
+                                    </SheetClose>
                                 )
                             }
-                        </SheetClose>
                     </div>
                 </SheetContent>
             </Sheet>

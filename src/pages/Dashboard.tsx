@@ -44,6 +44,11 @@ export default function Dashboard() {
         fetchPosts();
     }
 
+    const formatter = new Intl.DateTimeFormat("en-US", {
+        dateStyle: "medium",
+        timeStyle: "short",
+    });
+
     useEffect(() => {
         const fetchStats = async () => {
             const { count } = await supabase
@@ -116,9 +121,9 @@ export default function Dashboard() {
                 {posts.map((post) => (
                     <Card key={post.id}>
                         <CardContent className="flex items-center justify-between p-4">
-                            <div>
+                            <div className="max-w-40">
                                 <h3 className="font-medium">{post.title}</h3>
-                                <p className="text-sm text-muted-foreground">{post.created_at}</p>
+                                <p className="text-sm text-muted-foreground">{formatter.format(new Date(post.created_at))}</p>
                             </div>
                             <div className="flex gap-2">
                                 <Button

@@ -37,7 +37,7 @@ export default function Login() {
         <main className="mx-auto max-w-6xl p-4">
             <Card className="overflow-hidden">
                 <CardContent className="space-y-4 p-6">
-                    <div>
+                    <div className="space-y-2">
                         <Label>email</Label>
 
                         <Input
@@ -47,7 +47,7 @@ export default function Login() {
                         />
                     </div>
 
-                    <div>
+                    <div className="space-y-2">
                         <Label>password</Label>
 
                         <Input
