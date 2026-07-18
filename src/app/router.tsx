@@ -5,7 +5,6 @@ import Dashboard from "@/pages/Dashboard";
 import Login from "@/pages/Login";
 import Article from "@/pages/Article";
 import Editor from "@/pages/Editor";
-import LeaguePage from "@/pages/League";
 
 export const router = createBrowserRouter(
     [
@@ -13,7 +12,7 @@ export const router = createBrowserRouter(
             element: <Layout />,
             children: [
                 { path: "/", element: <Home /> },
-                { path: "/league/:league", element: <LeaguePage /> },
+                { path: "/league/:league", element: <Home /> },
                 { path: "/dashboard", element: <Dashboard /> },
                 { path: "/login", element: <Login />},
                 { path: "/article/:slug", element: <Article /> },

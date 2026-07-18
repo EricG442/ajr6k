@@ -12,7 +12,11 @@ export function MiniCard({ article }: MiniCardProps) {
         <NavLink to={`/article/${article.slug}`}>
             <Card>
                 <CardContent className="flex gap-4-p-4">
-                    <div className="h-20 w-20 rounded-md bg-muted" />
+                    <img
+                        src={article.cover_image}
+                        alt={article.title}
+                        className="h-20 w-20 rounded-md bg-muted"
+                    />
                 
                     <div className="space-y-2">
                         <h3 className="font-semibold">
@@ -20,7 +24,7 @@ export function MiniCard({ article }: MiniCardProps) {
                         </h3>
 
                         <p className="text-sm text-muted-foreground">
-                            {article.summary}
+                            {article.excerpt}
                         </p>
                     </div>
                 </CardContent>

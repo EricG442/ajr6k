@@ -1,6 +1,7 @@
 import { Menu } from "lucide-react";
 import { NavLink } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
+import { supabase } from "@/lib/supabase";
 
 import {
     Sheet,
@@ -10,13 +11,22 @@ import {
 } from "@/components/ui/sheet";
 import { Button } from "../ui/button";
 import { Input } from "@/components/ui/input";
+import {
+    DropdownMenu,
+    DropdownMenuTrigger,
+    DropdownMenuContent,
+    DropdownMenuItem,
+} from "@/components/ui/dropdown-menu";
+import {
+    Dialog,
+    DialogTrigger
+} from "@/components/ui/dialog";
+import ProfileDialog from "../profile/ProfileSettingsDialog";
 
 import { navLinks } from "@/components/navbar/NavLinks";
-import { supabase } from "@/lib/supabase";
-
 
 export function MobileNav() {
-    const { user } = useAuth();
+    const { user, profile } = useAuth();
     return (
         <div className="md:hidden">
             <Sheet>
@@ -32,10 +42,23 @@ export function MobileNav() {
                         <Input placeholder="Search articles..." />
                     </div>
 
-                    {navLinks.map( link => (
-                        <SheetClose asChild>
+                    <SheetClose>
+                        {user && (
                             <Button
-                                asChild
+                                variant="ghost"
+                                className="w-full justify-center py-6"
+                            >
+                                <NavLink
+                                    key="dashboard"
+                                    to="/dashboard"
+                                    className="text-sm font-medium hover:text-primary"
+                                >
+                                    Dashboard
+                                </NavLink>
+                            </Button>
+                        )}                        
+                        {navLinks.map( link => (
+                            <Button
                                 variant="ghost"
                                 className="w-full justify-center py-6"
                             >
@@ -47,20 +70,39 @@ export function MobileNav() {
                                     {link.label}
                                 </NavLink>
                             </Button>
-                        </SheetClose>
-                    ))}
+                        ))}
+                    </SheetClose>
 
                     <div className="w-full flex justify-center">
                         <SheetClose asChild>
                             {
                                 user ? (
-                                    <Button
-                                        onClick={async () => {
-                                            await supabase.auth.signOut();
-                                        }}
-                                    >
-                                        Sign Out
-                                    </Button>
+                                    <Dialog>
+                                        <DropdownMenu>
+                                            <DropdownMenuTrigger asChild>
+                                                <Button variant="ghost">
+                                                    {profile?.display_name}
+                                                </Button>
+                                            </DropdownMenuTrigger>
+                                            <DropdownMenuContent>
+                                                <DialogTrigger>
+                                                    <DropdownMenuItem>
+                                                        Profile Settings
+                                                    </DropdownMenuItem>
+                                                </DialogTrigger>
+                                                <DropdownMenuItem>
+                                                    <Button
+                                                        onClick={async () => {
+                                                            await supabase.auth.signOut();
+                                                        }}
+                                                    >
+                                                        Log out
+                                                    </Button>
+                                                </DropdownMenuItem>
+                                            </DropdownMenuContent>
+                                        </DropdownMenu>
+                                        <ProfileDialog />
+                                    </Dialog>
                                 ) : (
                                     <Button asChild>
                                         <NavLink to="/login">Log in</NavLink>

@@ -13,7 +13,11 @@ export function FeaturedCard({ article }: FeaturedCardProps) {
     return (
         <div>
             <Card  key={article.id} className="overflow-hidden">
-                <div className="h-56 bg-muted" />
+                <img
+                    src={article.cover_image}
+                    alt={article.title}
+                    className="h-56"
+                />
 
                 <CardContent className="space-y-4 p-6">
                     <Badge>{article.league}</Badge>
@@ -23,7 +27,7 @@ export function FeaturedCard({ article }: FeaturedCardProps) {
                     </h3>
 
                     <p className="text-muted-foreground">
-                        {article.summary}
+                        {article.excerpt}
                     </p>
 
                     <Button asChild>

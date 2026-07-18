@@ -5,6 +5,7 @@ import { useState, useEffect } from "react";
 
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { Star } from "lucide-react";
 
 export default function Dashboard() {
     const { profile } = useAuth();
@@ -28,6 +29,14 @@ export default function Dashboard() {
         }
         fetchPosts();
     };
+
+    const toggleFeatured = async (id: string, currentFeatured: boolean) => {
+        await supabase.from("posts").update({ featured: false }).eq("featured", true)
+        if (!currentFeatured) {
+            await supabase.from("posts").update({ featured: true }).eq("id", id);
+        }
+        fetchPosts();
+    }
 
     useEffect(() => {
         fetchPosts();
@@ -79,6 +88,19 @@ export default function Dashboard() {
                                 <p className="text-sm text-muted-foreground">{post.created_at}</p>
                             </div>
                             <div className="flex gap-2">
+                                <Button
+                                    variant="ghost"
+                                    size="icon"
+                                    onClick={() => toggleFeatured(post.id, post.featured)}
+                                >
+                                    <Star
+                                        className={`h-4 w-4 ${
+                                            post.featured
+                                                ? "fill-yellow-400 text-yellow-400"
+                                                : "text-muted-foreground"
+                                        }`}
+                                    />
+                                </Button>
                                 <Button variant="outline" size="sm">
                                     <NavLink to={`/article/editor/${post.id}`}>Edit</NavLink>
                                 </Button>

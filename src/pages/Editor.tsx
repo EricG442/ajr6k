@@ -7,6 +7,13 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue
+} from "@/components/ui/select";
 import TipTap from "@/components/editor/TipTap";
 import EditorStats from "@/components/editor/EditorStats";
 
@@ -15,9 +22,11 @@ export default function Editor() {
     const { id } = useParams();
     const isEdit = Boolean(id);
     const [articleId, setArticleId] = useState<string | null>(null);
-    const [title, setTitle] = useState("");
-    const [slug, setSlug] = useState("");
-    const [excerpt, setExcerpt] = useState("");
+    const [formData, setFormData] = useState({
+        title: "",
+        excerpt: "",
+        league: "",
+    });
     const [coverImage, setCoverImage] = useState<File | null>(null);
     const [coverImageUrl, setCoverImageUrl] = useState("");
     const [coverPreview, setCoverPreview] = useState("");
@@ -31,10 +40,13 @@ export default function Editor() {
         if (isEdit) return;
         const savedArticle = localStorage.getItem("savedArticle");
         if (savedArticle) {
-            const { title, slug, excerpt, content } = JSON.parse(savedArticle);
-            setTitle(title);
-            setSlug(slug);
-            setExcerpt(excerpt);
+            const article = JSON.parse(savedArticle);
+            setFormData( prev => ({
+                ...prev,
+                title: article.title,
+                excerpt: article.excerpt,
+                league: article.league,
+            }))
             setContent(content);
         }
     }, [isEdit]);
@@ -43,19 +55,16 @@ export default function Editor() {
         return title.toLowerCase().trim().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "");
     }
 
-    useEffect(() => {
-        if (isEdit) return;
-        setSlug(generateSlug(title));
-        localStorage.setItem("savedArticle", JSON.stringify({ title, slug, excerpt, content }))
-    }, [title, slug, excerpt, content, isEdit]);
-
     const clearEditorRef = useRef<() => void | null>(null);
 
     const clearContent = () => {
         localStorage.removeItem("savedArticle")
-        setTitle("")
-        setSlug("")
-        setExcerpt("")
+        setFormData( prev => ({
+            ...prev,
+            title: "",
+            excerpt: "",
+            league: ""
+        }))
         setCoverImage(null);
         setCoverPreview("");
         setContent({
@@ -67,7 +76,6 @@ export default function Editor() {
 
     const handleSubmit = async () => {
         if (!profile) return;
-        console.log("Cover image before upload:", coverImage);
         let imageUrl = coverImageUrl;
         if (coverImage) {
             const uploadedUrl = await uploadCoverImage();
@@ -75,11 +83,31 @@ export default function Editor() {
                 imageUrl = uploadedUrl;
             }
         }
-        console.log("Image URL:", imageUrl);
         if (isEdit) {
-            await supabase.from("posts").update({ title, slug, excerpt, content, cover_image: imageUrl }).eq("id", id);
+            await supabase
+                .from("posts")
+                .update({ 
+                    title: formData.title, 
+                    slug: generateSlug(formData.title), 
+                    excerpt: formData.excerpt, 
+                    content, 
+                    league: formData.league, 
+                    cover_image: imageUrl,
+                    updated_at: new Date().toISOString(),
+                }).eq("id", id);
         } else {
-            await supabase.from("posts").insert({ title, slug, excerpt, content, cover_image: imageUrl, author_id: profile.id });
+            await supabase
+                .from("posts")
+                .insert({ 
+                    title: formData.title, 
+                    slug: generateSlug(formData.title), 
+                    excerpt: formData.excerpt, 
+                    content, 
+                    league: formData.league, 
+                    cover_image: imageUrl, 
+                    author_id: profile.id, 
+                    author_name: profile.display_name 
+                });
         }
     }
 
@@ -102,12 +130,11 @@ export default function Editor() {
             return;
         }
 
-        const { data, error } = await supabase.from("posts").update({ published: true, }).eq("id", articleId).select();
+        const { error } = await supabase.from("posts").update({ published: true, published_at: new Date().toISOString() }).eq("id", articleId).select();
         if (error) {
             console.error("Error publishing article:", error);
             return;
         }
-        console.log("Published:", data)
     }
 
     useEffect(() => {
@@ -119,9 +146,12 @@ export default function Editor() {
                 return;
             }
             setArticleId(data.id);
-            setTitle(data.title);
-            setSlug(data.slug);
-            setExcerpt(data.excerpt);
+            setFormData( prev => ({
+                ...prev,
+                title: data.title,
+                excerpt: data.excerpt,
+                league: data.league
+            }))
             setCoverImageUrl(data.cover_image);
             setContent(
                 typeof data.content === "string" ? JSON.parse(data.content) : data.content
@@ -136,7 +166,7 @@ export default function Editor() {
     return (
         <div className="mx-auto max-w-4xl space-y-6 p-4">
             <h1 className="text-3xl font-bold">
-                New Article
+                {isEdit ? "Update Article" : "New Article"}
             </h1>
             <div className="flex flex-wrap gap-4">
                 <div className="space-y-2 max-w-2/3 flex-1">
@@ -144,8 +174,13 @@ export default function Editor() {
 
                     <Input 
                         placeholder="Enter article title..." 
-                        value={title}
-                        onChange={(e) => setTitle(e.target.value)}
+                        value={formData.title}
+                        onChange={ e => {
+                            setFormData((prev) => ({
+                                ...prev,
+                                title: e.target.value,
+                            }))
+                        }}
                     />
                 </div>
 
@@ -153,7 +188,7 @@ export default function Editor() {
                     <Label>Slug</Label>
 
                     <Input 
-                        value={slug}
+                        value={generateSlug(formData.title)}
                         readOnly
                     />
                 </div>
@@ -164,24 +199,46 @@ export default function Editor() {
 
                 <Textarea 
                     placeholder="Short article summary..." 
-                    value={excerpt}
-                    onChange={(e) => setExcerpt(e.target.value)}
+                    value={formData.excerpt}
+                    onChange={ e => {
+                        setFormData( prev => ({
+                            ...prev,
+                            excerpt: e.target.value
+                        }))
+                    }}
                 />
             </div>
 
-            <div className="space-y-2">
-                <Label>Cover Image</Label>
-                <Input
-                    type="file" 
-                    accept="image/*"
-                    onChange={ e => {
-                        const file = e.target.files?.[0];
-                        if (file) {
-                            setCoverImage(file);
-                            setCoverPreview(URL.createObjectURL(file));
-                        }
-                    }}
-                />
+            <div>
+                <div className="flex flex-row items-center gap-4">
+                    <div className="space-y-2">
+                        <Label>Cover Image</Label>
+                        <Input
+                            type="file" 
+                            accept="image/*"
+                            onChange={ e => {
+                                const file = e.target.files?.[0];
+                                if (file) {
+                                setCoverImage(file);
+                                setCoverPreview(URL.createObjectURL(file));
+                                }
+                            }}
+                        />
+                    </div>
+                    <div className="space-y-2 pt-5">
+                        <Select value={formData.league} onValueChange={ value => { setFormData( prev => ({ ...prev, league: value }) ) } }>
+                            <SelectTrigger>
+                                <SelectValue placeholder="Select a league" />
+                            </SelectTrigger>
+                            <SelectContent>
+                                <SelectItem value="NFL">NFL</SelectItem>
+                                <SelectItem value="NBA">NBA</SelectItem>
+                                <SelectItem value="MLB">MLB</SelectItem>
+                                <SelectItem value="NHL">NHL</SelectItem>
+                            </SelectContent>
+                        </Select>
+                    </div>
+                </div>
                 {coverPreview && (
                     <img
                         src={coverPreview}
