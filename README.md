@@ -7,50 +7,49 @@
 ![shadcn/ui](https://img.shields.io/badge/shadcn/ui-components-black)
 ![Licencse](https://img.shields.io/badge/license-MIT-blue)
 
-A sports journalism platform currently being developed as a custom CMS experience
+Astro6k is a sports journalism platform and custom CMS built with React, TypeScript, and Supabase.
+Writers can create, edit, publish, and manage articles through a dedicated dashboard while readers browse public sports content.
 
-The project is starting as a static React application with a custom Tiptap article editor.
-The current goal is to build the writing experience first, then expand into a full CMS with authentication, database storage, and publishing workflows.
-
-
-## Demo
+## **Demo**
 
 Link to demo
 
 
-## Overview
+## **Overview**
 
 This project is being build in stages:
 - **v0.x** &mdash; Static frontend and editor
 - **v1.0** &mdash; Full CMS with backend services and production deployment
 
 The current version focuses on creating a rich article writing experience before introducting backend complexity.
-### ✨ Features
 
-#### **v0.3.1**
-- Custom Tiptap rich text editor
-- Editor toolbar with:
-    - Headings
-    - Bold
-    - Italic
-    - Underline
-    - Strikethrough
-    - Text alignment
-- LocalStorage article persistence
-- Article clearing/reset functionality
-- Word and Character count tracking
+### ✨ **Current Features**
+- Email/password authentication
+- User profiles
+- Profile settings management
+- Rich text article editor
+- Draft and Published article states
+- Article creation and editing
+- Article dashboard
+- Author-specific content management
+- Public article pages
 - Responsive UI
 
+### 🛠️ **Tech Stack**
 
-### 🛠️ Tech Stack
+#### **Front End**
+- React 19
+- TypeScript
+- Vite
+- Tailwind CSS 4
+- shadcn/ui
+- TipTap
 
-**Client:** React, Vite, Tailwind CSS, Tiptap
+#### **Back End**
+- Supabase Auth
+- Supabase PostgresQL DB
 
-**Future Server:** Node, Express, Supabase
-
-
-
-## ⚡ Installation
+## ⚡ **Installation**
 
 Clone the repository:
 
@@ -71,7 +70,7 @@ Start the Development Server:
 ```
 
     
-## 🚧 Roadmap
+## 🚧 **Roadmap**
 
 ### **v0.3.0** ✅
 - [x] ~~Tiptap editor integration~~
@@ -79,9 +78,22 @@ Start the Development Server:
 - [x] ~~localStorage persistance~~
 - [x] ~~Editor statistics~~
 
-### **v0.4.0**
+### **v0.4.0** ✅
 - [x] ~~Supabase Auth~~
-- [x] ~~CRUD operations~~
+- [x] ~~Article CRUD operations~~
+- [x] ~~Article Image Upload~~
+- [x] ~~Public Article Page~~
+ 
+### **v0.5.0** ✅
+- [x] ~~User Profiles~~
+- [x] ~~Dashboard~~
+- [x] ~~Publishing Workflow~~
+- [x] ~~League filtering~~
+- [x] ~~Home Page~~
+
+### **v0.6.0**
+- [ ] Search features
+- [ ] Author profile images and bio cards
 
 ### **v1.0.0**
 - [ ] Supabase database integration
@@ -90,3 +102,4 @@ Start the Development Server:
 - [ ] Image uploads
 - [ ] Dashboard Page
 - [ ] Production Deployment
+- [ ] Analytics

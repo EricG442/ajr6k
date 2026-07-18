@@ -21,5 +21,4 @@ export const router = createBrowserRouter(
             ],
         },
     ],
-    { basename: "/ajr6k/" }
 );
