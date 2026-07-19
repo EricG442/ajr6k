@@ -8,7 +8,8 @@
 ![Licencse](https://img.shields.io/badge/license-MIT-blue)
 
 Astro6k is a sports journalism platform and custom CMS built with React, TypeScript, and Supabase.
-Writers can create, edit, publish, and manage articles through a dedicated dashboard while readers browse public sports content.
+
+The platform allows writeers to create, edit, publish, and manage sports articles through a dedicated dashboard while providing readers with a responsive public-facing publication experience.
 
 ## **Demo**
 
