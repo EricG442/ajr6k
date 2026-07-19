@@ -15,6 +15,8 @@ export default function ArticleContent({ content }: { content: object }) {
     });
 
     return (
-        <EditorContent editor={editor} />
+        <div className="article-content">
+            <EditorContent editor={editor} />
+        </div>
     );
 }

@@ -284,7 +284,7 @@ export default function Editor() {
             </div>
 
             <div className="rounded-xl border bg-muted py-12">
-                <div className="prose">
+                <div className="prose editor">
                     <TipTap
                         content={content}
                         isLoaded={isLoaded}

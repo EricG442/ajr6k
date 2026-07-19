@@ -34,6 +34,9 @@ export default function Dashboard() {
             console.error("Error deleting post:", error);
             return;
         }
+        toast.success("Post deleted", {
+            description: "Article was successfully deleted."
+        })
         fetchPosts();
     };
 

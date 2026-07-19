@@ -11,30 +11,50 @@ Astro6k is a sports journalism platform and custom CMS built with React, TypeScr
 
 The platform allows writeers to create, edit, publish, and manage sports articles through a dedicated dashboard while providing readers with a responsive public-facing publication experience.
 
-## **Demo**
-
-Link to demo
-
-
 ## **Overview**
 
-This project is being build in stages:
-- **v0.x** &mdash; Static frontend and editor
-- **v1.0** &mdash; Full CMS with backend services and production deployment
+Astro6k is built as a full-stack publishing platform focused on creating a modern writing and publishing workflow.
 
-The current version focuses on creating a rich article writing experience before introducting backend complexity.
+The project evolved from a static article frontend into a complete CMS featureing authentication, article management, rich text editing, media uploads, and public content delivery.
+
+### 🎯 **Why Astro6k?**
+Astro6k is built to explore the challenges of creating a modern sports publishing platform.
+
+The goal is to create a system where writers can manage their own content while reader have a fast, clean experience for discovering sports coverage.
+
+The project focuses on:
+- Building a custom CMS workflow
+- Managing authenticated user-generated content
+- Designing scalable database permissions
+- Creating a flexible rich text publishing system
 
 ### ✨ **Current Features**
-- Email/password authentication
-- User profiles
-- Profile settings management
-- Rich text article editor
-- Draft and Published article states
-- Article creation and editing
-- Article dashboard
-- Author-specific content management
+
+#### **Publishing Platform**
+- Public Homepage with featured article hero section
+- League-based article filtering
 - Public article pages
-- Responsive UI
+- Responsive navigation and mobile menu
+- Article typography system for rich content
+- Featured article management
+
+#### **CMS Dashboard**
+- Email/password authentication
+- Protected dashboard and editor routes
+- User profiles and profile settings
+- Article creation and editing
+- Draft and published article states
+- Author-specific article management
+- Rich text editor powered by TipTap
+- Article Image uploads
+- Save, publish, and update feedback notifications
+
+#### **Backend & Security**
+- Supabase authentication
+- PostgreSQL database
+- Row Level Security
+- Supabase Storage image handling
+- Database RPC functions for shared content state
 
 ### 🛠️ **Tech Stack**
 
@@ -50,21 +70,69 @@ The current version focuses on creating a rich article writing experience before
 - Supabase Auth
 - Supabase PostgresQL DB
 
+### 🏗️ **Architecture**
+Astro6k uses a client-driven architecture powered by React and Supabase.
+```
+React Application
+        |
+        |
+React Router
+        |
+        |
+Supabase
+ ├── Auth
+ ├── PostgreSQL
+ └── Storage
+```
+
+### 💡 **Technical Highlights**
+
+#### **Row Level Security**
+
+Implemented Supabase RLS policies to ensure users can only manage their own content.
+
+#### **Featured Article System**
+
+Built a database RPC function using PostgreSQL transactions to ensure only one article can be featured at a time.
+
+#### **Rich Text Publishing**
+
+Integrated TipTap to provide a customizable article editing experience with support for:
+- headings
+- lists
+- blockquotes
+- formatted content
+
 ## ⚡ **Installation**
 
-Clone the repository:
+**Clone the repository:**
 
 ```bash
     git clone https://github.com/EricG442/ajr6k
 ```
 
-Install dependencies:
+### 🔐 **Environment Variables**
+
+**Create a `.env` file:**
+
+```
+VITE_SUPABASE_URL=
+VITE_SUPABASE_ANON_KEY=
+```
+
+**Make sure your Supabase project has:**
+- Authentication enabled
+- Posts table configured
+- Storage bucket created
+- RLS policies applied
+
+**Install dependencies:**
 
 ```bash
     npm install
 ```
 
-Start the Development Server:
+**Start the Development Server:**
 
 ```bash
     npm run dev
@@ -92,15 +160,29 @@ Start the Development Server:
 - [x] ~~League filtering~~
 - [x] ~~Home Page~~
 
-### **v0.6.0**
-- [ ] Search features
-- [ ] Author profile images and bio cards
-
 ### **v1.0.0**
-- [ ] Supabase database integration
-- [ ] User authentication
-- [ ] Article CRUD operations
-- [ ] Image uploads
-- [ ] Dashboard Page
+- [x] ~~Full CMS workflow~~
+- [x] ~~Protected routes~~
+- [x] ~~Production ready article management~~
+- [x] ~~Featured article system~~
+- [x] ~~Responsive public platform~~
+- [ ] Production Deployment 
+
+### **Future Improvements**
+- [ ] Search features
+- [ ] Author profile images and bio
+- [ ] Author pages
 - [ ] Production Deployment
 - [ ] Analytics
+- [ ] Content scheduling
+- [ ] Newsletter integration
+- [ ] Editorial workflow
+- [ ] Social media publishing tools
+
+## 🚀 Project Status
+
+Astro6k is currently in active development.
+
+The current version provides a complete publishing workflow. Future development will focus on audience growth, analytics, and editorial tools.
+
+## 📸 Screenshots

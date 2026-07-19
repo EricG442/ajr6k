@@ -167,10 +167,14 @@
   box-sizing: border-box;
 }
 
-.ProseMirror {
+.editor .ProseMirror {
   min-height: 30rem;
   padding: 0.75rem;
   border: 1px solid var(--border);
+}
+
+.article-content .ProseMirror {
+  padding: 0.75rem;
 }
 
 .tiptap ul {
