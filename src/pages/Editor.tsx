@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/lib/supabase";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -14,10 +14,12 @@ import {
     SelectTrigger,
     SelectValue
 } from "@/components/ui/select";
+import { toast } from "sonner";
 import TipTap from "@/components/editor/TipTap";
 import EditorStats from "@/components/editor/EditorStats";
 
 export default function Editor() {
+    const navigate = useNavigate();
     const { profile } = useAuth();
     const { id } = useParams();
     const isEdit = Boolean(id);
@@ -26,11 +28,12 @@ export default function Editor() {
         title: "",
         excerpt: "",
         league: "",
+        cover_image: "",
     });
     const [coverImage, setCoverImage] = useState<File | null>(null);
-    const [coverImageUrl, setCoverImageUrl] = useState("");
     const [coverPreview, setCoverPreview] = useState("");
     const [isLoaded, setIsLoaded] = useState(false);
+    const [saving, setSaving] = useState(false);
     const [content, setContent] = useState<object>({
         type: "doc",
         content: [],
@@ -72,11 +75,15 @@ export default function Editor() {
             content: [],
         })
         clearEditorRef.current?.();
+        toast("Editor cleared", {
+            description: "All content has been removed."
+        })
     };
 
     const handleSubmit = async () => {
+        setSaving(true);
         if (!profile) return;
-        let imageUrl = coverImageUrl;
+        let imageUrl = formData.cover_image;
         if (coverImage) {
             const uploadedUrl = await uploadCoverImage();
             if (uploadedUrl) {
@@ -84,31 +91,49 @@ export default function Editor() {
             }
         }
         if (isEdit) {
-            await supabase
-                .from("posts")
-                .update({ 
-                    title: formData.title, 
-                    slug: generateSlug(formData.title), 
-                    excerpt: formData.excerpt, 
-                    content, 
-                    league: formData.league, 
-                    cover_image: imageUrl,
-                    updated_at: new Date().toISOString(),
-                }).eq("id", id);
+            try {
+                await supabase
+                    .from("posts")
+                    .update({ 
+                        title: formData.title, 
+                        slug: generateSlug(formData.title), 
+                        excerpt: formData.excerpt, 
+                        content, 
+                        league: formData.league, 
+                        cover_image: imageUrl,
+                        updated_at: new Date().toISOString(),
+                    }).eq("id", id);
+
+                toast.success("Draft updated", {
+                    description: "Your article has been updated."
+                })
+            } catch (error) {
+                toast.error("Failed to update draft")
+            }
         } else {
-            await supabase
-                .from("posts")
-                .insert({ 
-                    title: formData.title, 
-                    slug: generateSlug(formData.title), 
-                    excerpt: formData.excerpt, 
-                    content, 
-                    league: formData.league, 
-                    cover_image: imageUrl, 
-                    author_id: profile.id, 
-                    author_name: profile.display_name 
+            try {
+                await supabase
+                    .from("posts")
+                    .insert({ 
+                        title: formData.title, 
+                        slug: generateSlug(formData.title), 
+                        excerpt: formData.excerpt, 
+                        content, 
+                        league: formData.league, 
+                        cover_image: imageUrl, 
+                        author_id: profile.id, 
+                        author_name: profile.display_name 
+                    });
+
+                toast.success("Draft saved", {
+                    description: "Your article draft has been saved."
                 });
+                navigate("/dashboard");
+            } catch (error) {
+                toast.error("Failed to save draft")
+            }
         }
+        setSaving(false);
     }
 
     const uploadCoverImage = async (): Promise<string | null> => {
@@ -129,11 +154,14 @@ export default function Editor() {
             console.error("No article ID. Save draft first");
             return;
         }
-
-        const { error } = await supabase.from("posts").update({ published: true, published_at: new Date().toISOString() }).eq("id", articleId).select();
-        if (error) {
-            console.error("Error publishing article:", error);
-            return;
+        try {
+            await supabase.from("posts").update({ published: true, published_at: new Date().toISOString() }).eq("id", articleId).select();
+            toast.success("Draft Published", {
+                description: "Your article is now live."
+            })
+            navigate("/dashboard");
+        } catch (error) {
+            toast.error("Failed to publish article")
         }
     }
 
@@ -150,9 +178,9 @@ export default function Editor() {
                 ...prev,
                 title: data.title,
                 excerpt: data.excerpt,
-                league: data.league
+                league: data.league,
+                cover_image: data.cover_image,
             }))
-            setCoverImageUrl(data.cover_image);
             setContent(
                 typeof data.content === "string" ? JSON.parse(data.content) : data.content
             );
@@ -246,9 +274,9 @@ export default function Editor() {
                         className="rounded-xl max-h-80 object-cover"
                     />
                 )}
-                {coverImageUrl && (
+                {formData.cover_image && (
                     <img
-                        src={coverImageUrl}
+                        src={formData.cover_image}
                         alt="Article cover"
                         className="rounded-xl max-h-80 object-cover"
                     />
@@ -269,7 +297,7 @@ export default function Editor() {
             </div>
 
             <div className="rounded-xl border bg-muted p-12 text-center flex flex-wrap gap-4 justify-content items-center">
-                <Button variant="outline" onClick={handleSubmit}>
+                <Button variant="outline" onClick={handleSubmit} disabled={saving}>
                     {isEdit ? "Update Article" : "Save Draft"}
                 </Button>
 

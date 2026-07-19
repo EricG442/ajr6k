@@ -81,7 +81,7 @@ export default function Dashboard() {
     }, [])
 
     return (
-        <main className="p-4 space-y-6">
+        <div className="p-4 space-y-6">
             <header className="flex items-center justify-between">
                 <h1 className="text-2xl font-bold">
                     Dashboard
@@ -121,24 +121,38 @@ export default function Dashboard() {
                 {posts.map((post) => (
                     <Card key={post.id}>
                         <CardContent className="flex items-center justify-between p-4">
-                            <div className="max-w-40">
-                                <h3 className="font-medium">{post.title}</h3>
-                                <p className="text-sm text-muted-foreground">{formatter.format(new Date(post.created_at))}</p>
+                            <div className="max-w-80 flex flex-col">
+                                <h2 className="font-medium">{post.title}</h2>
+                                <ul>
+                                    <li className="text-sm text-muted-foreground">
+                                        Created at: {formatter.format(new Date(post.created_at))}
+                                    </li>
+                                    <li className="text-sm text-muted-foreground">
+                                        Last Updated: {formatter.format(new Date(post.updated_at))}
+                                    </li>
+                                    {post.published && (
+                                        <li className="text-sm text-muted-foreground">
+                                            Published at: {formatter.format(new Date(post.published_at))}
+                                        </li>
+                                    )}
+                                </ul>
                             </div>
                             <div className="flex gap-2">
-                                <Button
-                                    variant="ghost"
-                                    size="icon"
-                                    onClick={() => toggleFeatured(post.id, post.featured)}
-                                >
-                                    <Star
-                                        className={`h-4 w-4 ${
-                                            post.featured
-                                                ? "fill-yellow-400 text-yellow-400"
-                                                : "text-muted-foreground"
-                                        }`}
-                                    />
-                                </Button>
+                                {post.published && (
+                                    <Button
+                                        variant="ghost"
+                                        size="icon"
+                                        onClick={() => toggleFeatured(post.id, post.featured)}
+                                    >
+                                        <Star
+                                            className={`h-4 w-4 ${
+                                                post.featured
+                                                    ? "fill-yellow-400 text-yellow-400"
+                                                    : "text-muted-foreground"
+                                            }`}
+                                        />
+                                    </Button>
+                                )}
                                 <Button variant="outline" size="sm">
                                     <NavLink to={`/article/editor/${post.id}`}>Edit</NavLink>
                                 </Button>
@@ -150,6 +164,6 @@ export default function Dashboard() {
                     </Card>
                 ))}
             </section>
-        </main>
+        </div>
     )
 }
