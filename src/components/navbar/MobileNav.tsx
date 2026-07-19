@@ -23,6 +23,12 @@ import {
 } from "@/components/ui/dialog";
 import ProfileDialog from "../profile/ProfileSettingsDialog";
 
+import {
+    CircleArrowDown,
+    BadgeCheckIcon,
+    LogOutIcon
+} from "lucide-react";
+
 const navLinks = [
     { label: "Home", href: "/" },
     { label: "NFL", href: "/league/NFL" },
@@ -43,8 +49,46 @@ export function MobileNav() {
                 <SheetContent side="left" onOpenAutoFocus={ event => event.preventDefault()}>
                     <h1 className="w-full text-center font-bold text-xl">Astro6K</h1>
 
-                    <div className="mx-8">
-                        <Input placeholder="Search articles..." />
+                    <div className="mx-8 flex flex-row gap-2 mx-auto">
+                        <Input placeholder="Search articles..."  />
+                        <div className="flex justify-center">
+                            {
+                                user ? (
+                                    <Dialog>
+                                        <DropdownMenu>
+                                            <DropdownMenuTrigger asChild>
+                                                <Button variant="ghost">
+                                                    {profile?.display_name} <CircleArrowDown />
+                                                </Button>
+                                            </DropdownMenuTrigger>
+                                            <DropdownMenuContent>
+                                                <DialogTrigger>
+                                                    <DropdownMenuItem>
+                                                        <BadgeCheckIcon /> Profile Settings
+                                                    </DropdownMenuItem>
+                                                </DialogTrigger>
+                                                <DropdownMenuItem>
+                                                    <Button
+                                                        onClick={async () => {
+                                                            await supabase.auth.signOut();
+                                                        }}
+                                                    >
+                                                        <LogOutIcon /> Log out
+                                                    </Button>
+                                                </DropdownMenuItem>
+                                            </DropdownMenuContent>
+                                        </DropdownMenu>
+                                        <ProfileDialog />
+                                    </Dialog>
+                                ) : (
+                                    <SheetClose asChild>
+                                        <Button asChild>
+                                            <NavLink to="/login">Log in</NavLink>
+                                        </Button>
+                                    </SheetClose>
+                                )
+                            }
+                        </div>
                     </div>
 
                     
@@ -82,46 +126,6 @@ export function MobileNav() {
                                 </Button>
                             </SheetClose>
                         ))}
-                    
-
-                    <div className="w-full flex justify-center">
-                            {
-                                user ? (
-                                    <Dialog>
-                                        <DropdownMenu>
-                                            <DropdownMenuTrigger asChild>
-                                                <Button variant="ghost">
-                                                    {profile?.display_name}
-                                                </Button>
-                                            </DropdownMenuTrigger>
-                                            <DropdownMenuContent>
-                                                <DialogTrigger>
-                                                    <DropdownMenuItem>
-                                                        Profile Settings
-                                                    </DropdownMenuItem>
-                                                </DialogTrigger>
-                                                <DropdownMenuItem>
-                                                    <Button
-                                                        onClick={async () => {
-                                                            await supabase.auth.signOut();
-                                                        }}
-                                                    >
-                                                        Log out
-                                                    </Button>
-                                                </DropdownMenuItem>
-                                            </DropdownMenuContent>
-                                        </DropdownMenu>
-                                        <ProfileDialog />
-                                    </Dialog>
-                                ) : (
-                                    <SheetClose asChild>
-                                        <Button asChild>
-                                            <NavLink to="/login">Log in</NavLink>
-                                        </Button>
-                                    </SheetClose>
-                                )
-                            }
-                    </div>
                 </SheetContent>
             </Sheet>
         </div>

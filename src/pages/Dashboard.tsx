@@ -3,6 +3,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/lib/supabase";
 import { useState, useEffect } from "react";
 
+import { toast } from "sonner";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Star } from "lucide-react";
@@ -19,7 +20,7 @@ export default function Dashboard() {
 
     const fetchPosts = async () => {
         if (!profile) return;
-        const { data, error } = await supabase.from("posts").select("*").order("created_at", { ascending: false });
+        const { data, error } = await supabase.from("posts").select("*").eq("author_id", profile.id).order("created_at", { ascending: false });
         if (error) {
             console.error("Error fetching posts:", error);
             return;
@@ -36,11 +37,15 @@ export default function Dashboard() {
         fetchPosts();
     };
 
-    const toggleFeatured = async (id: string, currentFeatured: boolean) => {
-        await supabase.from("posts").update({ featured: false }).eq("featured", true)
-        if (!currentFeatured) {
-            await supabase.from("posts").update({ featured: true }).eq("id", id);
+    const toggleFeatured = async (postId: string) => {
+        const { error } = await supabase.rpc("set_featured_post", { target_post_id: postId });
+        if (error) {
+            console.error("RPC Error:", error);
+            return;
         }
+        toast.success("Article featured", {
+            description: "Your article will be featured on the home page."
+        })
         fetchPosts();
     }
 
@@ -142,7 +147,7 @@ export default function Dashboard() {
                                     <Button
                                         variant="ghost"
                                         size="icon"
-                                        onClick={() => toggleFeatured(post.id, post.featured)}
+                                        onClick={() => toggleFeatured(post.id)}
                                     >
                                         <Star
                                             className={`h-4 w-4 ${

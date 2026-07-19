@@ -11,24 +11,22 @@ export default function Home() {
 
     useEffect(() => {
         const fetchArticles = async () => {
-            let query = supabase
-                .from("posts")
-                .select("*")
-                .eq("published", true)
-                .order("created_at", { ascending: false });
+            let featuredQuery = supabase.from("posts").select("*").eq("published", true).eq("featured", true);
+            let latestQuery = supabase.from("posts").select("*").eq("published", true).order("created_at", { ascending: false });
 
-            if (league) query = query.eq("league", league);
+            if (league) {
+                featuredQuery = featuredQuery.eq("league", league);
+                latestQuery = latestQuery.eq("league", league);
+            }
 
-            const { data, error } = await query.limit(6);
-            if (error) {
-                console.error(error);
+            const [featuredResult, latestResult] = await Promise.all([ featuredQuery.limit(1), latestQuery.limit(6) ]);
+            if (featuredResult.error || latestResult.error) {
+                console.error(featuredResult.error ?? latestResult.error);
                 return;
             }
-
-            if (data) {
-                setFeaturedArticle(data[0] ?? null);
-                setLatestArticles(data.slice(1));
-            }
+            const heroArticle = featuredResult.data?.[0] ?? latestResult.data?.[0] ?? null;
+            setFeaturedArticle(heroArticle);
+            setLatestArticles(latestResult.data ?? []);
         };
 
         fetchArticles();
