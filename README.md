@@ -1,5 +1,7 @@
 
 # 🚀 Astro6k
+[![Live Demo](https://img.shields.io/badge/demo-live-success)](https://astro6k.vercel.app)
+[![Vercel](https://img.shields.io/badge/deployed%20on-Vercel-black?logo=vercel)](https://astro6k.vercel.app)
 ![React](https://img.shields.io/badge/React-19-61DAFB?logo=react)
 ![TypeScript](https://img.shields.io/badge/TypeScript-5-3178C6?logo=typescript)
 ![Vite](https://img.shields.io/badge/Vite-Build-purple?logo=vite) 
