@@ -2,6 +2,7 @@ import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { supabase } from "@/lib/supabase";
 import ArticleContent from "@/components/articles/ArticleContent";
+import ArticleLikeButton from "@/components/articles/ArticleLikeButton";
 
 export default function Article() {
     const { slug } = useParams();
@@ -48,6 +49,9 @@ export default function Article() {
                 <p className="text-muted-foreground">
                     Published on: {formatter.format(dateObj)}
                 </p>
+                <div className="mt-4">
+                    <ArticleLikeButton postId={article.id} />
+                </div>
             </div>
             <p className="mt-2 text-muted-foreground">
                 {article.excerpt}

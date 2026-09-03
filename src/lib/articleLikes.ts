@@ -1,7 +1,7 @@
 import { supabase } from "@/lib/supabase";
 import { getReaderId } from "@/lib/reader";
 
-export async function getArticleLikeCount(postId: number) {
+export async function getArticleLikeCount(postId: string) {
     const { count, error } = await supabase
         .from("article_likes")
         .select("*", { count: "exact", head: true })
@@ -14,7 +14,7 @@ export async function getArticleLikeCount(postId: number) {
     return count ?? 0;
 }
 
-export async function hasLikedArticle(postId: number) {
+export async function hasLikedArticle(postId: string) {
     const readerId = getReaderId();
 
     const { data, error } = await supabase
@@ -31,7 +31,7 @@ export async function hasLikedArticle(postId: number) {
     return !!data;
 }
 
-export async function likeArticle(postId: number) {
+export async function likeArticle(postId: string) {
     const readerId = getReaderId();
 
     const { error } = await supabase
@@ -43,7 +43,7 @@ export async function likeArticle(postId: number) {
     }
 }
 
-export async function unlikeArticle(postId: number) {
+export async function unlikeArticle(postId: string) {
     const readerId = getReaderId();
 
     const { error } = await supabase
